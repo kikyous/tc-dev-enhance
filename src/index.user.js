@@ -5,34 +5,13 @@
 // @match       https://lms-stg.tronclass.com.cn/*
 // @match       https://lms-qa.tronclass.com.cn/*
 // @grant       none
+// @noframes
 // @version     1.6
 // @author      chen
 // @description 2023/9/19 17:48:17
 // ==/UserScript==
 
-const style = `
-._inject_root {
-    display: inline-flex !important;
-    align-items: center;
-    width: 100px;
-    position: fixed;
-    top: 0;
-    right: 0;
-    z-index: 9999;
-}
 
-._inject_root.error input, ._inject_root.error input:focus {
-  border: red solid 2px !important;
-}
-._inject_root input {
-    background: rgba(0,0,0,0);
-    color: red;
-    height: 25px !important;
-}
-._inject_root input:focus {
-    background-color: rgba(0,0,0,0) !important;
-}
-`;
 
 const logout = () => {
     return fetch("/api/logout", {
@@ -41,7 +20,7 @@ const logout = () => {
     }).catch(() => true);
 };
 
-const login = (username, password) => {
+const login = (username, password, credentials = 'same-origin') => {
     const data = {
         user_name: username,
         password: password,
@@ -49,10 +28,11 @@ const login = (username, password) => {
     };
     return fetch("/api/login", {
         headers: { "content-type": "application/json;charset=UTF-8" },
+        credentials: credentials,
         body: JSON.stringify(data),
         method: "POST",
     }).then(function (response) {
-        console.log(response.status); // Will show you the status
+        console.log(response);
         if (!response.ok) {
             throw new Error(`HTTP status ${response.status}`);
         }
@@ -60,36 +40,75 @@ const login = (username, password) => {
     });
 };
 
-window._onInputchange = (value) => {
-    if (!value) {
-        return
-    }
+
+const style = `
+*, *:before, *:after {
+    box-sizing: border-box;
+}
+:host input {
+    color: red;
+    border: 1px solid #cbcbcb;
+    border-radius: 4px;
+    outline: none;
+    background: rgba(0,0,0,0);
+    padding: 1px 4px;
+    width: 100%;
+}
+
+:host(.error) input, :host(.error) input:focus {
+  border: red solid 2px !important;
+}
+`;
 
 
-    let [username, password] = value.split(' ')
-    if (password) {
-        localStorage.setItem('__pswd', password);
-    } else {
-        password = localStorage.getItem('__pswd') || 'password'
+customElements.define('enhance-input', class extends HTMLElement {
+    constructor() {
+        super();
+        const value = window.globalData?.user?.userNo || ''
+
+        const shadowRoot = this.attachShadow({ mode: 'open' });
+        shadowRoot.innerHTML = `
+            <style>${style}</style>
+            <input name='user_name' autocomplete="on" onfocus="this.select()" value="${value}" type=text />
+        `;
+
+        const input = shadowRoot.querySelector("input");
+
+        input.addEventListener("change", () => {
+            this.inputChanged(input.value)
+        })
     }
-    logout()
-        .then(() => login(username, password))
-        .then(() => {
-            window.location.reload();
+
+    inputChanged(value) {
+        if (!value) {
+            return
+        }
+
+        let [username, password] = value.split(' ')
+        if (password) {
+            localStorage.setItem('__pswd', password);
+        } else {
+            password = localStorage.getItem('__pswd') || 'password'
+        }
+        const logoutAndLogin = () => {
+            logout()
+                .then(() => login(username, password))
+                .then(() => {
+                    window.location.reload();
+                })
+        }
+
+        // test account then logout
+        login(username, password, 'omit').then(logoutAndLogin).catch(() => {
+            this.classList.add("error");
         })
-        .catch(() => {
-            document.querySelector("._inject_root").classList.add("error");
-        })
-};
+    }
+});
 
 const inject = (node) => {
-    document.head.insertAdjacentHTML("beforeend", `<style>${style}</style>`);
-    const value = window.globalData?.user?.userNo || ''
-
-
     node.insertAdjacentHTML(
         "afterbegin",
-        `<div class="_inject_root"><input onchange="_onInputchange(this.value)" onfocus="this.select()" value="${value}" type=text /></div>`
+        `<enhance-input style='width: 100px; position: fixed; top: 0; right: 0; z-index: 9999;'></enhance-input>`
     );
 };
 
