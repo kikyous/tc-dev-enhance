@@ -5,7 +5,7 @@
 // @match       https://lms-stg.tronclass.com.cn/*
 // @match       https://lms-qa.tronclass.com.cn/*
 // @grant       none
-// @version     1.5
+// @version     1.6
 // @author      chen
 // @description 2023/9/19 17:48:17
 // ==/UserScript==
@@ -21,8 +21,8 @@ const style = `
     z-index: 9999;
 }
 
-._inject_root.error input, input:focus {
-  border: red solid 2px;
+._inject_root.error input, ._inject_root.error input:focus {
+  border: red solid 2px !important;
 }
 ._inject_root input {
     background: rgba(0,0,0,0);
@@ -67,7 +67,6 @@ window._onInputchange = (value) => {
 
 
     let [username, password] = value.split(' ')
-    localStorage.setItem('__username', username)
     if (password) {
         localStorage.setItem('__pswd', password);
     } else {
@@ -85,7 +84,8 @@ window._onInputchange = (value) => {
 
 const inject = (node) => {
     document.head.insertAdjacentHTML("beforeend", `<style>${style}</style>`);
-    const value = localStorage.getItem('__username') || ''
+    const value = window.globalData?.user?.userNo || ''
+
 
     node.insertAdjacentHTML(
         "afterbegin",
