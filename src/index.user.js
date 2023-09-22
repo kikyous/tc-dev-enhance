@@ -64,7 +64,7 @@ const style = `
 customElements.define('enhance-input', class extends HTMLElement {
     constructor() {
         super();
-        const value = window.globalData?.user?.userNo || ''
+        const value = window.globalData?.user?.userNo || window.statisticsSettings?.user?.userNo || ''
 
         const shadowRoot = this.attachShadow({ mode: 'open' });
         shadowRoot.innerHTML = `
