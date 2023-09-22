@@ -4,9 +4,10 @@
 // @match       http://localhost:5000/*
 // @match       https://lms-stg.tronclass.com.cn/*
 // @match       https://lms-qa.tronclass.com.cn/*
+// @match       https://lms-product.tronclass.com.cn/*
 // @grant       none
 // @noframes
-// @version     1.6
+// @version     1.7
 // @author      chen
 // @description 2023/9/19 17:48:17
 // ==/UserScript==
