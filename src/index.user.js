@@ -63,6 +63,10 @@ const style = `
     width: 100%;
 }
 
+form {
+    margin: 0
+}
+
 .orgs-wrapper label {
     margin: 8px 0;
     line-height: 1;
@@ -122,7 +126,6 @@ customElements.define('enhance-input', class extends HTMLElement {
             <form>
                 <input name='user_name' autocomplete="on" onfocus="this.select()" value="${value}" type=text />
             </form>
-            <div class='orgs'></div>
         `;
 
         const form = shadowRoot.querySelector("form");
