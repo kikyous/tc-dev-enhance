@@ -68,6 +68,7 @@ label {
     background: white;
     border: 1px solid #cbcbcb;
     padding: 5px;
+    border-radius: 2px;
 }
 
 .info {
@@ -82,7 +83,7 @@ label {
 }
 
 .slide-in-top {
-	animation: slide-in-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+	animation: slide-in-top 0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
 }
 
 @keyframes slide-in-top {
@@ -144,7 +145,7 @@ customElements.define('enhance-input', class extends HTMLElement {
                 const orgsHtml = orgs.map((org) => {
                     return `<label><input type="radio" name="org" value="${org.id}"> ${org.name}</label>`
                 }).join('')
-                form.insertAdjacentHTML('beforeend', `<div class="orgs-wrapper">${orgsHtml}</div>`)
+                form.insertAdjacentHTML('beforeend', `<div class="orgs-wrapper slide-in-top">${orgsHtml}</div>`)
                 form.querySelectorAll('.orgs-wrapper input[type="radio"]').forEach((radio) => {
                     radio.addEventListener('change', (event) => {
                         resolve({ org_id: event.target.value })
@@ -174,6 +175,7 @@ customElements.define('enhance-input', class extends HTMLElement {
         }
 
         this.shadowRoot.querySelector('.orgs-wrapper')?.remove()
+        this.classList.remove('error');
 
         const testLogin = () => {
             return login(username, password, '', 'omit').then((result) => {
