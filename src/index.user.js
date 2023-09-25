@@ -50,32 +50,42 @@ const style = `
 *, *:before, *:after {
     box-sizing: border-box;
 }
+:host {
+    font-size: 13px;
+}
 :host input[type="text"] {
     color: red;
     border: 1px solid #cbcbcb;
-    border-radius: 4px;
+    border-radius: 2px;
     outline: none;
     background: rgba(0,0,0,0);
     padding: 1px 4px;
     width: 100%;
 }
 
-label {
-    display: block;
+.orgs-wrapper label {
+    margin: 8px 0;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+}
+
+.orgs-wrapper input {
+    margin: 0 5px;
 }
 
 .orgs-wrapper {
     background: white;
     border: 1px solid #cbcbcb;
-    padding: 5px;
+    padding: 0 5px;
     border-radius: 2px;
 }
 
 .info {
     background: white;
     border-radius: 2px;
-    padding: 3px;
-    font-size: 13px;
+    border: 1px solid #cbcbcb;
+    padding: 3px 10px;
 }
 
 :host(.error) input, :host(.error) input:focus {
@@ -143,7 +153,7 @@ customElements.define('enhance-input', class extends HTMLElement {
             const orgs = result['orgs']
             if (orgs) {
                 const orgsHtml = orgs.map((org) => {
-                    return `<label><input type="radio" name="org" value="${org.id}"> ${org.name}</label>`
+                    return `<label><input type="radio" name="org" value="${org.id}"> <span> ${org.name} </span> </label>`
                 }).join('')
                 form.insertAdjacentHTML('beforeend', `<div class="orgs-wrapper slide-in-top">${orgsHtml}</div>`)
                 form.querySelectorAll('.orgs-wrapper input[type="radio"]').forEach((radio) => {
