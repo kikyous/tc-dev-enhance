@@ -1,13 +1,14 @@
 // ==UserScript==
 // @name        TC dev enhance
 // @namespace   Violentmonkey Scripts
+// @homepageURL https://github.com/kikyous/tc-dev-enhance
 // @match       http://localhost:5000/*
 // @match       https://lms-stg.tronclass.com.cn/*
 // @match       https://lms-qa.tronclass.com.cn/*
 // @match       https://lms-product.tronclass.com.cn/*
 // @grant       none
 // @noframes
-// @version     2.0
+// @version     2.1
 // @author      chen
 // @description 2023/9/19 17:48:17
 // ==/UserScript==
@@ -53,14 +54,15 @@ const style = `
 :host {
     font-size: 13px;
 }
-:host input[type="text"] {
+
+.user-input {
     color: red;
     border: 1px solid #cbcbcb;
     border-radius: 2px;
     outline: none;
-    background: rgba(0,0,0,0);
     padding: 1px 4px;
     width: 100%;
+    background: rgba(0, 0, 0, 0);
 }
 
 form {
@@ -92,8 +94,8 @@ form {
     padding: 3px 10px;
 }
 
-:host(.error) input, :host(.error) input:focus {
-  border: red solid 2px !important;
+:host(.error) .user-input, :host(.error) .user-input:focus {
+  border: red solid 2px;
 }
 
 .slide-in-top {
@@ -112,6 +114,23 @@ form {
     opacity: 1;
   }
 }
+
+@keyframes linearGradientMove {
+    100% {
+        background-position: 4px 0, -4px 100%, 0 -4px, 100% 4px;
+    }
+}
+
+:host(.loading) .user-input  {
+    background:
+        linear-gradient(90deg, red 50%, transparent 0) repeat-x,
+        linear-gradient(90deg, red 50%, transparent 0) repeat-x,
+        linear-gradient(0deg, red 50%, transparent 0) repeat-y,
+        linear-gradient(0deg, red 50%, transparent 0) repeat-y;
+    background-size: 4px 1px, 4px 1px, 1px 4px, 1px 4px;
+    background-position: 0 0, 0 100%, 0 0, 100% 0;
+    animation: linearGradientMove .3s infinite linear;
+}
 `;
 
 
@@ -123,8 +142,8 @@ customElements.define('enhance-input', class extends HTMLElement {
         const shadowRoot = this.attachShadow({ mode: 'open' });
         shadowRoot.innerHTML = `
             <style>${style}</style>
-            <form>
-                <input name='user_name' autocomplete="on" onfocus="this.select()" value="${value}" type=text />
+            <form class='slide-in-top'>
+                <input class='user-input' name='user_name' autocomplete="on" onfocus="this.select()" value="${value}" type=text />
             </form>
         `;
 
@@ -189,6 +208,8 @@ customElements.define('enhance-input', class extends HTMLElement {
 
         this.shadowRoot.querySelector('.orgs-wrapper')?.remove()
         this.classList.remove('error');
+        this.classList.add('loading');
+
 
         const testLogin = () => {
             return login(username, password, '', 'omit').then((result) => {
@@ -204,6 +225,7 @@ customElements.define('enhance-input', class extends HTMLElement {
         // test account then logout
         testLogin().then(this.selectOrgIfNeeded.bind(this)).then(logoutAndLogin).catch(() => {
             this.classList.add("error");
+            this.classList.remove('loading');
         })
     }
 });
