@@ -1,18 +1,19 @@
 // ==UserScript==
 // @name        TC dev enhance
+// @name:zh-CN  TC开发增强
+// license      MIT
 // @namespace   Violentmonkey Scripts
 // @homepageURL https://github.com/kikyous/tc-dev-enhance
 // @match       http://localhost:5000/*
 // @match       https://lms-stg.tronclass.com.cn/*
 // @match       https://lms-qa.tronclass.com.cn/*
 // @match       https://lms-product.tronclass.com.cn/*
-// @grant       none
 // @noframes
-// @version     2.1
+// @version     2.2
 // @author      chen
-// @description 2023/9/19 17:48:17
+// @description 快速切换TC账号
+// @grant GM.registerMenuCommand
 // ==/UserScript==
-
 
 
 const logout = () => {
@@ -104,13 +105,11 @@ form {
 
 @keyframes slide-in-top {
   0% {
-    -webkit-transform: translateY(-1000px);
-            transform: translateY(-1000px);
+    transform: translateY(-1000px);
     opacity: 0;
   }
   100% {
-    -webkit-transform: translateY(0);
-            transform: translateY(0);
+    transform: translateY(0);
     opacity: 1;
   }
 }
@@ -137,12 +136,12 @@ form {
 customElements.define('enhance-input', class extends HTMLElement {
     constructor() {
         super();
-        const value = window.globalData?.user?.userNo || window.statisticsSettings?.user?.userNo || ''
+        const value = unsafeWindow.globalData?.user?.userNo || unsafeWindow.statisticsSettings?.user?.userNo || ''
 
         const shadowRoot = this.attachShadow({ mode: 'open' });
         shadowRoot.innerHTML = `
             <style>${style}</style>
-            <form class='slide-in-top'>
+            <form>
                 <input class='user-input' name='user_name' autocomplete="on" onfocus="this.select()" value="${value}" type=text />
             </form>
         `;
@@ -172,7 +171,7 @@ customElements.define('enhance-input', class extends HTMLElement {
         this.shadowRoot.querySelector('.orgs-wrapper')?.remove()
 
         return new Promise((resolve) => {
-            const orgs = result['orgs']
+            const orgs = result.orgs;
             if (orgs) {
                 const orgsHtml = orgs.map((org) => {
                     return `<label><input type="radio" name="org" value="${org.id}"> <span> ${org.name} </span> </label>`
@@ -238,3 +237,13 @@ const inject = (node) => {
 };
 
 inject(document.body);
+
+
+GM.registerMenuCommand('临时隐藏/显示登录输入框', () => {
+    const input = document.querySelector('enhance-input')
+    if (input) {
+        input.remove()
+    } else {
+        inject(document.body)
+    }
+})
