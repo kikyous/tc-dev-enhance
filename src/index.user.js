@@ -2,13 +2,13 @@
 // @name        TC dev enhance
 // @name:zh-CN  TC开发增强
 // @name:zh-TW  TC開發增强
-// license      MIT
+// @license      MIT
 // @namespace   Violentmonkey Scripts
 // @homepageURL https://github.com/kikyous/tc-dev-enhance
-// @match       http://localhost:5000/*
-// @match       https://lms-stg.tronclass.com.cn/*
-// @match       https://lms-qa.tronclass.com.cn/*
-// @match       https://lms-product.tronclass.com.cn/*
+// @match       *://localhost:5000/*
+// @match       *://lms-stg.tronclass.com.cn/*
+// @match       *://lms-qa.tronclass.com.cn/*
+// @match       *://lms-product.tronclass.com.cn/*
 // @noframes
 // @version     2.2
 // @author      chen
