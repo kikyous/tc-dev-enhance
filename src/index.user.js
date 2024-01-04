@@ -2,15 +2,16 @@
 // @name        TC dev enhance
 // @name:zh-CN  TC开发增强
 // @name:zh-TW  TC開發增强
-// @license      MIT
+// @license     MIT
 // @namespace   Violentmonkey Scripts
 // @homepageURL https://github.com/kikyous/tc-dev-enhance
 // @match       *://localhost:5000/*
 // @match       *://lms-stg.tronclass.com.cn/*
 // @match       *://lms-qa.tronclass.com.cn/*
 // @match       *://lms-product.tronclass.com.cn/*
+// @match       *://lms-university.tronclass.com.cn/*
 // @noframes
-// @version     2.2
+// @version     2.3
 // @author      chen
 // @description Switch TC accounts conveniently
 // @description:zh-CN 快速切换TC账号
