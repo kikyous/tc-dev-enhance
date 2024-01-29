@@ -11,7 +11,7 @@
 // @match       *://lms-product.tronclass.com.cn/*
 // @match       *://lms-university.tronclass.com.cn/*
 // @noframes
-// @version     2.3
+// @version     2.4
 // @author      chen
 // @description Switch TC accounts conveniently
 // @description:zh-CN 快速切换TC账号
@@ -23,6 +23,7 @@
 const logout = () => {
     return fetch("/api/logout", {
         headers: { "content-type": "application/json;charset=UTF-8" },
+        body: JSON.stringify({}),
         method: "POST",
     }).catch(() => true);
 };
