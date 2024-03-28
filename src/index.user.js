@@ -10,8 +10,9 @@
 // @match       *://lms-qa.tronclass.com.cn/*
 // @match       *://lms-product.tronclass.com.cn/*
 // @match       *://lms-university.tronclass.com.cn/*
+// @match       *://lms-university-fmmu.tronclass.com.cn/*
 // @noframes
-// @version     2.4
+// @version     2.5
 // @author      chen
 // @description Switch TC accounts conveniently
 // @description:zh-CN 快速切换TC账号
