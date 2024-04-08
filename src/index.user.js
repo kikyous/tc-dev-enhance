@@ -12,7 +12,7 @@
 // @match       *://lms-university.tronclass.com.cn/*
 // @match       *://lms-university-fmmu.tronclass.com.cn/*
 // @noframes
-// @version     2.5
+// @version     2.6
 // @author      chen
 // @description Switch TC accounts conveniently
 // @description:zh-CN 快速切换TC账号
@@ -252,4 +252,10 @@ GM.registerMenuCommand('临时隐藏/显示登录输入框', () => {
     } else {
         inject(document.body)
     }
+})
+
+
+fetch('/d/version').then(res => res.text()).then(result => {
+    const buildIndex = result.match(/^\d+\.\d+\.(\w+)/)[1]
+    document.title = `[${buildIndex}] ` + document.title
 })
